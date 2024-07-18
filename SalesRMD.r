@@ -46,3 +46,5 @@ Sales [,list (TotalSales = sum(order_value_EUR)), by = category]
 ggplot(Sales, aes(x=category, y=order_value_EUR, fill =category, label = order_value_EUR)) + 
   geom_bar(stat = "identity") +
   facet_wrap(~country)
+
+## A screenshot of a tableau dashboard is available on my Linkedin profile
