@@ -1,55 +1,47 @@
----
-title: "Deluxe Retail Sales EDA"
-author: "Dan"
-date: "2023-09-11"
-output: html_document
----
+##### With R studio already installed, save the CSV to a folder of your choice and then load it using the read.csv command
 
-
-##### Hi all, I'm new to this. Would appreciate some comments. Ok, here we go.
-
-#Lets load the good old tidyverse !
+## I use the tidyverse and data.table libraries in the analysis, loaded as follows
 
 library(tidyverse)
-
-## data.table too
-
 library (data.table)
 
-## Lets preview the dataframe
+## After loading the libraries I preview the dataset with glimpse() and head() functions.
+## - This helps to gain an initial overview of the number of columns and the data contained in each column.
 
 glimpse (Sales)
-
 head (Sales)
 
-## Ok, lets get some insights. 1. How does Deluxe's sales compare among different countries?
+## To get insights regarding the sales of the clothing among different countries
 
 setDT (Sales) 
-
 Sales[ ,list(TotalSales=sum(order_value_EUR)), by=country]
 
-## Great, we have the sales volume for 15 countries, lets see how the managers performed
+## The code above returns output showing fifteen countries and the companies sales in each of them 
+## the code below derives insisghts on the performance of each manager
 
 Sales [,list(TotalSales = sum(order_value_EUR)), by = sales_manager]
 
-## Wait a minute, 15 countries and 15 Sales Managers? is every manager in charge of the operations of a single country, lets see how many managers had sales in Sweden.
+## The output shows fifteen managers with their respective sales
+## Could it be that every manager is assigned a specific country or do the managers operate in multiple countyries?
+## To check how many managers recorded sales in Sweden
 
 Sales %>%
 filter (country == "Sweden") %>%
 select (sales_manager)
 
-## Aha! got you Maxie Marrow, was about to do this 14 more times but I luckily got a combination of codes that made it way easier.
+## The code shows that only one manager recorded sales in Sweden,
+## The code below extracts the full list of managers and their country of operation
 
 Sales %>%
 group_by (country) %>%
 distinct (sales_manager) %>%
 print (n = 15)
 
-## I'd love to see how much worth of each product category was sold
+## The code below extracts the amount of sales recorded for each category of clothes
 
 Sales [,list (TotalSales = sum(order_value_EUR)), by = category]
 
-## Ok, I'll now get some plots  1. How much sales of each category did Deluxe have in every country ?
+## The following code uses ggplot2 to generate a bar graph for each product category among all the countries?
 
 ggplot(Sales, aes(x=category, y=order_value_EUR, fill =category, label = order_value_EUR)) + 
   geom_bar(stat = "identity") +
